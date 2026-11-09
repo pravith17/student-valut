@@ -145,6 +145,24 @@ body {
   margin-bottom: 9px;
 }
 
+  .share-btn {
+  display: none;
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  border: 1px solid #6b91a8;
+  border-radius: 11px;
+  background: linear-gradient(120deg, #416b86, #203c50);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.share-btn:hover {
+  filter: brightness(1.2);
+}
+
 input {
   width: 100%;
   padding: 15px;
@@ -469,6 +487,10 @@ button:disabled {
     <a href="#" id="downloadBtn">
     </a>
 
+    <button id="shareBtn" class="share-btn" style="display:none;">
+  ↗ SHARE STUDENT LINK
+</button>
+
   </section>
 
   <!-- RIGHT LARGE PHOTO VIEW -->
@@ -605,6 +627,8 @@ function get2025Template() {
     extension: match[3]
   };
 }
+
+  
 
 function updateSections() {
   const branch = branchSelect.value;
@@ -861,6 +885,45 @@ if (window.__SHARED_STUDENT__) {
   usnInput.value = sharedStudent.usn;
   searchPhoto();
 }
+
+  const shareBtn = document.getElementById("shareBtn");
+
+// Show share button when student photo loads successfully
+// Add this inside your existing image.onload function:
+shareBtn.style.display = "block";
+
+// Hide share button when loading a new student
+// Add this inside loadPhoto():
+shareBtn.style.display = "none";
+
+// Share student-specific URL
+shareBtn.addEventListener("click", async function () {
+
+  if (!currentUSN || !imageExists) return;
+
+  const shareURL =
+    window.location.origin + "/" + currentUSN.toLowerCase();
+
+  const shareData = {
+    title: "Student Photo - " + currentUSN,
+    text: "View this student's photograph:",
+    url: shareURL
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      await navigator.clipboard.writeText(shareURL);
+      alert("Student link copied!\n" + shareURL);
+    }
+  } catch (error) {
+    if (error.name !== "AbortError") {
+      alert("Share this link:\n" + shareURL);
+    }
+  }
+
+});
 
 </script>
 
