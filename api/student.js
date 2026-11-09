@@ -44,7 +44,7 @@ function resolveStudent(usn) {
 
   if (!/^[A-Z0-9]{6,20}$/.test(normalized)) return null;
 
-  if (normalized === "NNM24CS340" || normalized === "NNM24CS341") {
+  if (normalized === "NNM24CS340" || normalized === "NNM24CS341" || normalized === "NNM24CS339") {
     return {
       usn: normalized,
       batch: "24",
