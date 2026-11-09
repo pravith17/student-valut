@@ -145,24 +145,6 @@ body {
   margin-bottom: 9px;
 }
 
-  .share-btn {
-  display: none;
-  width: 100%;
-  padding: 15px;
-  margin-top: 10px;
-  border: 1px solid #6b91a8;
-  border-radius: 11px;
-  background: linear-gradient(120deg, #416b86, #203c50);
-  color: white;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.share-btn:hover {
-  filter: brightness(1.2);
-}
-
 input {
   width: 100%;
   padding: 15px;
@@ -255,6 +237,25 @@ button:disabled {
 }
 
 .download-btn:hover {
+  filter: brightness(1.2);
+}
+
+.share-btn {
+  display: none;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(120deg, #416b86, #203c50);
+  color: white;
+  border-radius: 11px;
+  padding: 15px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #6b91a8;
+  margin-top: 10px;
+}
+
+.share-btn:hover {
   filter: brightness(1.2);
 }
 
@@ -484,12 +485,8 @@ button:disabled {
       </div>
     </div>
 
-    <button id="shareBtn" class="share-btn" style="display:none;">
-  ↗ SHARE STUDENT LINK
-</button>
-
-    <a href="#" id="downloadBtn">
-    </a>
+    <button class="share-btn" id="shareBtn" type="button">↗ &nbsp; SHARE STUDENT LINK</button>
+    <button class="share-btn" id="shareBtn" type="button">↗ &nbsp; SHARE STUDENT LINK</button>
 
   </section>
 
@@ -571,7 +568,7 @@ const message = document.getElementById("message");
 const searchBtn = document.getElementById("searchBtn");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
-const downloadBtn = document.getElementById("downloadBtn");
+const shareBtn = document.getElementById("shareBtn");
 const photoLabel = document.getElementById("photoLabel");
 
 let currentUSN = "";
@@ -627,8 +624,6 @@ function get2025Template() {
     extension: match[3]
   };
 }
-
-  
 
 function updateSections() {
   const branch = branchSelect.value;
@@ -721,7 +716,7 @@ function loadPhoto(usn) {
   imageExists = false;
   photo.style.display = "none";
   placeholder.style.display = "none";
-  downloadBtn.style.display = "none";
+  shareBtn.style.display = "none";
 
   searchBtn.disabled = true;
   prevBtn.disabled = true;
@@ -757,7 +752,7 @@ function loadPhoto(usn) {
     message.textContent = "✓ PHOTO FOUND — " + usn;
     message.className = "success";
 
-    downloadBtn.style.display = "block";
+    shareBtn.style.display = "block";
 
     searchBtn.disabled = false;
     prevBtn.disabled = false;
@@ -828,46 +823,42 @@ usnInput.addEventListener("keydown", function(e) {
   if (e.key === "Enter") searchPhoto();
 });
 
-// Download
-downloadBtn.addEventListener("click", async function(e) {
-  e.preventDefault();
 
-  if (!imageExists) return;
+// Share a stable, student-specific URL. The Vercel route serves server-rendered
+// Open Graph metadata for this USN, so messaging apps can display the photo.
+shareBtn.addEventListener("click", async function() {
+  if (!imageExists || !currentUSN) return;
 
-  const usn = currentUSN;
-  const imageURL = batchSelect.value === "25" ? currentPhotoURL : getURL(usn);
-
-  downloadBtn.textContent = "PREPARING DOWNLOAD...";
+  const shareURL = window.location.origin + "/" + encodeURIComponent(currentUSN.toLowerCase());
+  const shareData = {
+    title: "Student Photo - " + currentUSN,
+    text: "View this student's photograph:",
+    url: shareURL
+  };
 
   try {
-    const response = await fetch(imageURL);
-
-    if (!response.ok) {
-      throw new Error("Download unavailable");
+    if (navigator.share) {
+      await navigator.share(shareData);
+      message.textContent = "✓ Share link opened for " + currentUSN;
+      message.className = "success";
+    } else if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(shareURL);
+      message.textContent = "✓ Student link copied: " + shareURL;
+      message.className = "success";
+    } else {
+      window.prompt("Copy this student link:", shareURL);
     }
-
-    const blob = await response.blob();
-    const blobURL = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = blobURL;
-    link.download = usn + ".JPG";
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    setTimeout(() => URL.revokeObjectURL(blobURL), 2000);
-
-  } catch(error) {
-    window.open(imageURL, "_blank");
+  } catch (error) {
+    if (error && error.name === "AbortError") return;
+    try {
+      await navigator.clipboard.writeText(shareURL);
+      message.textContent = "✓ Student link copied to clipboard.";
+      message.className = "success";
+    } catch (_) {
+      window.prompt("Copy this student link:", shareURL);
+    }
   }
-
-  downloadBtn.textContent = "↓  DOWNLOAD PHOTO";
-}
-
-);
-
+});
 
 // If this page was opened through a student-specific share URL, load that student.
 if (window.__SHARED_STUDENT__) {
@@ -885,45 +876,6 @@ if (window.__SHARED_STUDENT__) {
   usnInput.value = sharedStudent.usn;
   searchPhoto();
 }
-
-  const shareBtn = document.getElementById("shareBtn");
-
-// Show share button when student photo loads successfully
-// Add this inside your existing image.onload function:
-shareBtn.style.display = "block";
-
-// Hide share button when loading a new student
-// Add this inside loadPhoto():
-shareBtn.style.display = "none";
-
-// Share student-specific URL
-shareBtn.addEventListener("click", async function () {
-
-  if (!currentUSN || !imageExists) return;
-
-  const shareURL =
-    window.location.origin + "/" + currentUSN.toLowerCase();
-
-  const shareData = {
-    title: "Student Photo - " + currentUSN,
-    text: "View this student's photograph:",
-    url: shareURL
-  };
-
-  try {
-    if (navigator.share) {
-      await navigator.share(shareData);
-    } else {
-      await navigator.clipboard.writeText(shareURL);
-      alert("Student link copied!\n" + shareURL);
-    }
-  } catch (error) {
-    if (error.name !== "AbortError") {
-      alert("Share this link:\n" + shareURL);
-    }
-  }
-
-});
 
 </script>
 
