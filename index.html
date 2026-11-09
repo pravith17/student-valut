@@ -840,14 +840,17 @@ shareBtn.addEventListener("click", async function () {
   try {
     await navigator.clipboard.writeText(shareURL);
 
-    message.textContent = "✓ Student URL copied successfully!";
-    message.className = "success";
+    // Change button text
+    shareBtn.textContent = "✓ Copied";
+
+    // Restore after 2.5 seconds
+    setTimeout(() => {
+      shareBtn.textContent = "Copy Student URL";
+    }, 2500);
 
   } catch (error) {
 
-    // Fallback for browsers without clipboard permission
     const tempInput = document.createElement("textarea");
-
     tempInput.value = shareURL;
     document.body.appendChild(tempInput);
 
@@ -855,8 +858,11 @@ shareBtn.addEventListener("click", async function () {
     document.execCommand("copy");
     tempInput.remove();
 
-    message.textContent = "✓ Student URL copied successfully!";
-    message.className = "success";
+    shareBtn.textContent = "✓ Copied";
+
+    setTimeout(() => {
+      shareBtn.textContent = "Copy Student URL";
+    }, 2500);
   }
 
 });
