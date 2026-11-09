@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/:usn([A-Za-z0-9]+)",
+      "destination": "/api/student?usn=:usn"
+    }
+  ]
+}

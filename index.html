@@ -1,0 +1,868 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Student Photo Vault — find and view student photographs by USN.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Student Photo Vault">
+<meta property="og:title" content="Student Photo Vault">
+<meta property="og:description" content="Find and view student photographs by USN.">
+<meta property="og:url" content="https://sp.renenture.com/">
+<meta property="og:image" content="https://sp.renenture.com/open-graph.png">
+<meta property="og:image:secure_url" content="https://sp.renenture.com/open-graph.png">
+<meta property="og:image:type" content="image/png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Student Photo Vault">
+<meta name="twitter:description" content="Find and view student photographs by USN.">
+<meta name="twitter:image" content="https://sp.renenture.com/open-graph.png">
+<title>Student Photo Vault</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #090909;
+  --panel: #15120f;
+  --panel2: #211710;
+  --maroon: #49301f;
+  --maroon-light: #a87948;
+  --border: #493625;
+  --text: #fff;
+  --muted: #b5a18c;
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background:
+    radial-gradient(ellipse at 15% 5%, #352316 0%, transparent 40%),
+    radial-gradient(ellipse at 95% 90%, #24170e 0%, transparent 35%),
+    var(--bg);
+  color: var(--text);
+  padding: 25px;
+}
+
+.header {
+  max-width: 1450px;
+  margin: 0 auto 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.brand-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #a87948, #49301f);
+  border: 1px solid #bc9567;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 23px;
+}
+
+.brand h1 {
+  font-size: 21px;
+  letter-spacing: 1px;
+}
+
+.brand h1 span {
+  color: #c69b6d;
+}
+
+.brand p {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 4px;
+  letter-spacing: 2px;
+}
+
+.status {
+  border: 1px solid #536b42;
+  background: #172117;
+  color: #a4c58b;
+  padding: 8px 14px;
+  border-radius: 30px;
+  font-size: 11px;
+}
+
+.dashboard {
+  max-width: 1450px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: minmax(280px, 370px) minmax(0, 1fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.controls {
+  background: linear-gradient(160deg, #211811, #100e0c);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 27px;
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  box-shadow: 0 15px 50px #0006;
+}
+
+.section-title {
+  font-size: 12px;
+  color: #c69b6d;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.welcome h2 {
+  font-size: 25px;
+  margin-top: 10px;
+}
+
+.welcome p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  color: #d0b28e;
+  margin-bottom: 9px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #60462e;
+  background: #0b0908;
+  color: white;
+  border-radius: 11px;
+  outline: none;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+input:focus {
+  border-color: #bd925e;
+  box-shadow: 0 0 15px #a8794840;
+}
+
+
+select {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #60462e;
+  background: #0b0908;
+  color: white;
+  border-radius: 11px;
+  outline: none;
+  font-size: 14px;
+}
+select:focus { border-color: #bd925e; box-shadow: 0 0 15px #a8794840; }
+
+.primary-btn {
+  width: 100%;
+  border: none;
+  border-radius: 11px;
+  padding: 15px;
+  background: linear-gradient(120deg, #9b7046, #49301f);
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.primary-btn:hover {
+  filter: brightness(1.2);
+  transform: translateY(-2px);
+}
+
+.navigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.nav-btn {
+  padding: 13px 8px;
+  border-radius: 10px;
+  border: 1px solid #705236;
+  background: #261c14;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: #513923;
+}
+
+button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.download-btn {
+  display: none;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  background: linear-gradient(120deg, #536b42, #263c29);
+  color: white;
+  border-radius: 11px;
+  padding: 15px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #748d5e;
+}
+
+.download-btn:hover {
+  filter: brightness(1.2);
+}
+
+.tip {
+  margin-top: auto;
+  background: #211910;
+  border: 1px solid #493625;
+  padding: 14px;
+  border-radius: 11px;
+  color: #b5a18c;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.photo-panel {
+  min-width: 0;
+  background: linear-gradient(145deg, #201811, #0f0d0b);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 15px 50px #0006;
+}
+
+.photo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.photo-header h2 {
+  font-size: 16px;
+}
+
+.photo-header span {
+  color: #bda17f;
+  font-size: 11px;
+}
+
+.photo-stage {
+  flex: 1;
+  min-height: 550px;
+  background:
+    radial-gradient(circle at center, #302216, #100d0b 75%);
+  border: 1px solid #493625;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  overflow: hidden;
+  position: relative;
+}
+
+#photo {
+  display: none;
+  max-width: 100%;
+  max-height: 72vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 2px solid #876440;
+  box-shadow: 0 15px 45px #0009;
+}
+
+.placeholder {
+  text-align: center;
+  color: #a38a71;
+}
+
+.placeholder .icon {
+  font-size: 75px;
+  margin-bottom: 20px;
+  opacity: .65;
+}
+
+.placeholder h3 {
+  font-size: 19px;
+  color: #ddc4a5;
+  margin-bottom: 9px;
+}
+
+.placeholder p {
+  font-size: 13px;
+}
+
+#message {
+  margin-top: 16px;
+  font-size: 13px;
+  text-align: center;
+  color: #b5a18c;
+  min-height: 20px;
+}
+
+.success { color: #a4c58b !important; }
+.error { color: #e58d7b !important; }
+
+.footer {
+  max-width: 1450px;
+  margin: 20px auto 0;
+  padding: 12px 0;
+  text-align: center;
+  font-size: 11px;
+  color: #89755e;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 950px) {
+  body { padding: 18px; }
+  .dashboard {
+    grid-template-columns: 290px minmax(0, 1fr);
+    gap: 15px;
+  }
+  .controls { padding: 20px; }
+  .photo-panel { padding: 17px; }
+  .photo-stage { min-height: 450px; }
+}
+
+@media (max-width: 650px) {
+  body { padding: 13px; }
+  .header { margin-bottom: 17px; }
+  .brand h1 { font-size: 17px; }
+  .brand-icon { width: 41px; height: 41px; }
+  .status { font-size: 9px; padding: 7px 9px; }
+  .dashboard { grid-template-columns: 1fr; }
+  .controls { padding: 21px; gap: 18px; }
+  .welcome h2 { font-size: 22px; }
+  .tip { margin-top: 0; }
+  .photo-panel { padding: 14px; }
+  .photo-stage { min-height: 340px; padding: 12px; }
+  #photo { max-height: 65vh; max-width: 100%; }
+  .footer { font-size: 9px; }
+}
+
+@media (max-width: 380px) {
+  .brand h1 { font-size: 14px; }
+  .brand p { font-size: 9px; letter-spacing: 1px; }
+  .controls { padding: 16px; }
+  .photo-stage { min-height: 280px; }
+  .navigation { gap: 7px; }
+  .nav-btn { font-size: 12px; }
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+  <div class="brand">
+    <div class="brand-icon">🎓</div>
+    <div>
+      <h1>STUDENT <span>PHOTO VAULT</span></h1>
+    </div>
+  </div>
+
+</header>
+
+<main class="dashboard">
+
+  <!-- LEFT CONTROL PANEL -->
+
+  <section class="controls">
+
+    <div class="welcome">
+      <div class="section-title">CONTROL CENTER</div>
+      <h2>Find Student Photo</h2>
+      <p>Enter a student USN to view the corresponding photograph.</p>
+    </div>
+
+    <div class="field">
+      <label for="batch">BATCH</label>
+      <select id="batch">
+        <option value="24">2024–2028</option>
+        <option value="23">2023–2027</option>
+        <option value="25">2025–2029</option>
+      </select>
+    </div>
+
+    <div class="field" id="branchField" style="display:none">
+      <label for="branch">BRANCH</label>
+      <select id="branch">
+        <option value="">Select branch</option>
+      </select>
+    </div>
+
+    <div class="field" id="sectionField" style="display:none">
+      <label for="section">SECTION</label>
+      <select id="section">
+        <option value="">Select section</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="usn">STUDENT USN</label>
+      <input
+        id="usn"
+        type="text"
+        placeholder="Enter student USN"
+        autocomplete="off"
+        spellcheck="false"
+      >
+    </div>
+
+    <button class="primary-btn" id="searchBtn">
+      🔍 &nbsp; SEARCH PHOTO
+    </button>
+
+    <div>
+      <div class="section-title" style="margin-bottom:12px">
+        STUDENT NAVIGATION
+      </div>
+
+      <div class="navigation">
+        <button class="nav-btn" id="prevBtn" disabled>
+          ← PREVIOUS
+        </button>
+
+        <button class="nav-btn" id="nextBtn" disabled>
+          NEXT →
+        </button>
+      </div>
+    </div>
+
+    <a href="#" id="downloadBtn">
+    </a>
+
+  </section>
+
+  <!-- RIGHT LARGE PHOTO VIEW -->
+
+  <section class="photo-panel">
+
+    <div class="photo-header">
+      <h2>Student Photograph</h2>
+      <span id="photoLabel">PHOTO PREVIEW</span>
+    </div>
+
+    <div class="photo-stage">
+
+      <div class="placeholder" id="placeholder">
+        <div class="icon"></div>
+        <h3>Photo Preview</h3>
+        <p>Your selected student's photo will appear here.</p>
+      </div>
+
+      <img id="photo" alt="Student photograph">
+
+    </div>
+
+    <p id="message">
+      Waiting for a USN...
+    </p>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+</footer>
+
+<script>
+
+const BASE_URL =
+"https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F";
+
+const batchSelect = document.getElementById("batch");
+const branchSelect = document.getElementById("branch");
+const sectionSelect = document.getElementById("section");
+const branchField = document.getElementById("branchField");
+const sectionField = document.getElementById("sectionField");
+const PHOTO_URLS = {
+  "CSE|A": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtcs4%2FNU25A55.JPG",
+  "CSE|B": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtcs4%2FNU25B55.JPG",
+  "CSE|C": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtcs4%2FNU25C55.JPG",
+  "CSE|D": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtcs4%2FNN25CSE228.JPG",
+  "CSE|E": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtcs4%2FNN25CSE289.JPG",
+  "CSE|F": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtcs4%2FNN25CSE392.JPG",
+  "ISE|G": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtis4%2FNU25G18.JPG",
+  "ISE|H": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtis4%2FNN25ISE045.JPG",
+  "ISE|I": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtis4%2FNN25ISE038.JPG",
+  "ISE|J": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtis4%2FNN25ISE007.JPG",
+  "AIM|K": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtam4%2FNU25K15.JPG",
+  "AIM|L": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtam4%2FNU25L15.JPG",
+  "CYB|N": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtcy4%2FNU25N18.JPG",
+  "CCE|O": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtcc4%2FNU25O18.JPG",
+  "RAI|P": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtra4%2FNU25P18.JPG",
+  "ECE|Q": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtec4%2FNU25Q15.JPG",
+  "ECE|R": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtec4%2FNN25ECE075.JPG",
+  "ECE|S": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtec4%2FNN25ECE170.JPG",
+  "ACT|T": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtac4%2FNU25T19.JPG",
+  "VDT|U": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtvl4%2FNU25U15.JPG",
+  "EEE|V": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtee4%2FNN25EEE076.JPG",
+  "EEE|W": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtee4%2FNN25EEE076.JPG",
+  "BTY|X": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtbt4%2FNU25X55.JPG",
+  "CIV|Y": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtcv4%2FNU25Y15.JPG",
+  "MECH|Z1": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtme4%2FNU25Z115.JPG",
+  "MECH|Z2": "https://university-student-photos.s3.ap-south-1.amazonaws.com/049/student_photos%2F1001%2Fbtme4%2FNU25Z215.JPG"
+};
+
+const usnInput = document.getElementById("usn");
+const photo = document.getElementById("photo");
+const placeholder = document.getElementById("placeholder");
+const message = document.getElementById("message");
+const searchBtn = document.getElementById("searchBtn");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+const photoLabel = document.getElementById("photoLabel");
+
+let currentUSN = "";
+let currentPhotoURL = "";
+let requestID = 0;
+let imageExists = false;
+
+function updateBatchFields() {
+  currentPhotoURL = "";
+  currentUSN = "";
+  const is2025 = batchSelect.value === "25";
+  branchField.style.display = is2025 ? "block" : "none";
+  sectionField.style.display = is2025 ? "block" : "none";
+  if (is2025) {
+    const branches = [...new Set(Object.keys(PHOTO_URLS).map(k => k.split("|")[0]))].sort();
+    branchSelect.innerHTML = '<option value="">Select branch</option>' +
+      branches.map(b => `<option value="${b}">${b}</option>`).join("");
+    updateSections();
+  } else {
+    usnInput.placeholder = batchSelect.value === "24" ? "NNM24XXXXX" : "NNM23XXXXX";
+  }
+  usnInput.value = "";
+  photo.style.display = "none";
+  placeholder.style.display = "block";
+  placeholder.querySelector("h3").textContent = "Photo Preview";
+  placeholder.querySelector("p").textContent = "Your selected student's photo will appear here.";
+  message.textContent = "Waiting for a USN...";
+  photoLabel.textContent = "PHOTO PREVIEW";
+  prevBtn.disabled = true;
+  nextBtn.disabled = true;
+}
+
+function get2025Template() {
+  const key = branchSelect.value + "|" + sectionSelect.value;
+  const templateURL = PHOTO_URLS[key];
+  if (!templateURL) throw new Error("No Excel photo URL is listed for this branch and section.");
+
+  // Excel stores folder separators as %2F. Isolate only the filename
+  // before decoding, so folder names never become part of the USN prefix.
+  const encodedSeparator = templateURL.toLowerCase().lastIndexOf("%2f");
+  const normalSeparator = templateURL.lastIndexOf("/");
+  const splitAt = Math.max(encodedSeparator, normalSeparator);
+  const separatorLength = splitAt === encodedSeparator && encodedSeparator > normalSeparator ? 3 : 1;
+  const directory = templateURL.slice(0, splitAt + separatorLength);
+  const rawFilename = templateURL.slice(splitAt + separatorLength);
+  const filename = decodeURIComponent(rawFilename);
+  const match = filename.match(/^(.*?)(\d+)(\.[^.]+)$/);
+  if (!match) throw new Error("The Excel URL does not contain a numbered sample USN.");
+
+  return {
+    directory,
+    prefix: match[1],
+    extension: match[3]
+  };
+}
+
+function updateSections() {
+  const branch = branchSelect.value;
+  const sections = Object.keys(PHOTO_URLS)
+    .filter(k => k.startsWith(branch + "|"))
+    .map(k => k.split("|")[1]).sort();
+  sectionSelect.innerHTML = '<option value="">Select section</option>' +
+    sections.map(s => `<option value="${s}">${s}</option>`).join("");
+  sectionSelect.value = "";
+  usnInput.value = "";
+  usnInput.placeholder = "Enter student USN";
+  currentPhotoURL = "";
+}
+
+function updateUSNPlaceholder() {
+  if (batchSelect.value !== "25") return;
+  if (!branchSelect.value || !sectionSelect.value) {
+    usnInput.placeholder = "Select branch and section first";
+    return;
+  }
+  try {
+    const template = get2025Template();
+    usnInput.placeholder = template.prefix + "XX (enter USN)";
+  } catch (error) {
+    usnInput.placeholder = "Enter student USN";
+  }
+}
+batchSelect.addEventListener("change", updateBatchFields);
+branchSelect.addEventListener("change", () => {
+  updateSections();
+  updateUSNPlaceholder();
+});
+sectionSelect.addEventListener("change", updateUSNPlaceholder);
+updateBatchFields();
+
+function getURL(usn) {
+  const normalizedUSN = usn.trim().toUpperCase();
+  if (batchSelect.value === "25") {
+    const template = get2025Template();
+    const escapedPrefix = template.prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const validUSN = new RegExp("^" + escapedPrefix + "\\d+$");
+    if (!validUSN.test(normalizedUSN)) {
+      throw new Error("Enter a valid USN");
+    }
+    return template.directory + encodeURIComponent(normalizedUSN) + template.extension;
+  }
+  if (normalizedUSN === "NNM24CS340") return "./NNM24CS340.PNG";
+  if (normalizedUSN === "NNM24CS341") return "./NNM24CS341.PNG";
+  return BASE_URL + encodeURIComponent(normalizedUSN) + ".JPG";
+}
+
+// Automatically convert lowercase to uppercase
+usnInput.addEventListener("input", function() {
+  const start = this.selectionStart;
+  const end = this.selectionEnd;
+
+  this.value = this.value.toUpperCase();
+
+  this.setSelectionRange(start, end);
+});
+
+// Search
+function searchPhoto() {
+  const usn = usnInput.value.trim().toUpperCase();
+  if (!usn) {
+    message.textContent = "Please enter a student USN.";
+    message.className = "error";
+    return;
+  }
+  currentUSN = usn;
+  usnInput.value = usn;
+  if (batchSelect.value === "25") {
+    try {
+      currentPhotoURL = getURL(usn);
+    } catch (error) {
+      message.textContent = error.message;
+      message.className = "error";
+      return;
+    }
+  } else {
+    currentPhotoURL = "";
+  }
+  loadPhoto(usn);
+}
+
+// Load photograph
+function loadPhoto(usn) {
+  const id = ++requestID;
+
+  imageExists = false;
+  photo.style.display = "none";
+  placeholder.style.display = "none";
+  downloadBtn.style.display = "none";
+
+  searchBtn.disabled = true;
+  prevBtn.disabled = true;
+  nextBtn.disabled = true;
+
+  message.textContent = "Loading student photograph...";
+  message.className = "";
+  photoLabel.textContent = usn;
+
+  const image = new Image();
+  let imageURL;
+  try {
+    imageURL = getURL(usn);
+  } catch (error) {
+    placeholder.style.display = "block";
+    placeholder.querySelector("h3").textContent = "Selection Required";
+    placeholder.querySelector("p").textContent = error.message;
+    message.textContent = error.message;
+    message.className = "error";
+    searchBtn.disabled = false;
+    return;
+  }
+
+  image.onload = function() {
+    if (id !== requestID) return;
+
+    photo.src = imageURL;
+    photo.style.display = "block";
+
+    placeholder.style.display = "none";
+    imageExists = true;
+
+    message.textContent = "✓ PHOTO FOUND — " + usn;
+    message.className = "success";
+
+    downloadBtn.style.display = "block";
+
+    searchBtn.disabled = false;
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+  };
+
+  image.onerror = function() {
+    if (id !== requestID) return;
+
+    imageExists = false;
+
+    photo.style.display = "none";
+    placeholder.style.display = "block";
+
+    placeholder.querySelector("h3").textContent =
+      "Photo Not Found";
+
+    placeholder.querySelector("p").textContent =
+      "No photograph is available for this USN.";
+
+    message.textContent = "✕ No photo found for " + usn;
+    message.className = "error";
+
+    photoLabel.textContent = "NOT AVAILABLE";
+
+    searchBtn.disabled = false;
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+  };
+
+  image.src = imageURL;
+}
+
+// Next / Previous
+function navigate(direction) {
+  const match = currentUSN.match(/^(.*?)(\d+)$/);
+  if (!match) {
+    message.textContent = "USN must end with a number for navigation.";
+    message.className = "error";
+    return;
+  }
+  const prefix = match[1];
+  const number = match[2];
+  const nextNumber = Number(number) + direction;
+  if (nextNumber < 0) return;
+  const newUSN = prefix + String(nextNumber).padStart(number.length, "0");
+  currentUSN = newUSN;
+  usnInput.value = newUSN;
+  if (batchSelect.value === "25") {
+    try {
+      currentPhotoURL = getURL(newUSN);
+    } catch (error) {
+      message.textContent = error.message;
+      message.className = "error";
+      return;
+    }
+  }
+  loadPhoto(newUSN);
+}
+
+// Button actions
+searchBtn.addEventListener("click", searchPhoto);
+
+prevBtn.addEventListener("click", () => navigate(-1));
+nextBtn.addEventListener("click", () => navigate(1));
+
+usnInput.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") searchPhoto();
+});
+
+// Download
+downloadBtn.addEventListener("click", async function(e) {
+  e.preventDefault();
+
+  if (!imageExists) return;
+
+  const usn = currentUSN;
+  const imageURL = batchSelect.value === "25" ? currentPhotoURL : getURL(usn);
+
+  downloadBtn.textContent = "PREPARING DOWNLOAD...";
+
+  try {
+    const response = await fetch(imageURL);
+
+    if (!response.ok) {
+      throw new Error("Download unavailable");
+    }
+
+    const blob = await response.blob();
+    const blobURL = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = blobURL;
+    link.download = usn + ".JPG";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(blobURL), 2000);
+
+  } catch(error) {
+    window.open(imageURL, "_blank");
+  }
+
+  downloadBtn.textContent = "↓  DOWNLOAD PHOTO";
+}
+
+);
+
+
+// If this page was opened through a student-specific share URL, load that student.
+if (window.__SHARED_STUDENT__) {
+  const sharedStudent = window.__SHARED_STUDENT__;
+  batchSelect.value = sharedStudent.batch;
+  updateBatchFields();
+
+  if (sharedStudent.batch === "25") {
+    branchSelect.value = sharedStudent.branch;
+    updateSections();
+    sectionSelect.value = sharedStudent.section;
+    updateUSNPlaceholder();
+  }
+
+  usnInput.value = sharedStudent.usn;
+  searchPhoto();
+}
+
+</script>
+
+</body>
+</html>
